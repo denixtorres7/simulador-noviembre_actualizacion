@@ -33,7 +33,7 @@ document.getElementById('agencySave').addEventListener('click',()=>{const agency
 const restoreInput=document.getElementById('restoreFile'),restoreFeedback=document.getElementById('restoreFeedback');
 document.getElementById('loadBackup').addEventListener('click',()=>restoreInput.click());
 document.getElementById('saveBackup').addEventListener('click',()=>{
- const keys=['svc_payroll_v01','svc_costos_v02','svc_productos_v01','svc-audiovisual-v2','svc-pi-v1','svc-pi-v2','svc-project-v1','svc-design-quotes-v1','svc-agency-v1','svc-contract-v1','svc-timeline-v1','svc-production-v1','svc-eco-v1','svc-break-even-v1','svc-commercial-quote-v1','svc-role-contracts-v1'];
+ const keys=['svc_payroll_v01','svc_costos_v02','svc_productos_v01','svc-audiovisual-v2','svc-pi-v1','svc-pi-v2','svc-project-v1','svc-design-quotes-v1','svc-agency-v1','svc-contract-v1','svc-timeline-v1','svc-production-v1','svc-eco-v1','svc-break-even-v1','svc-commercial-quote-v1','svc-role-contracts-v1','svc-design-quotes-trash-v1'];
  const modules={};for(const key of keys){const raw=localStorage.getItem(key);if(raw!==null){try{modules[key]=JSON.parse(raw)}catch{restoreFeedback.textContent='No se puede guardar: datos dañados en '+key;return}}}
  if(!Object.keys(modules).length){restoreFeedback.textContent='Todavía no hay datos de las calculadoras para guardar.';return}
  const backup={schema:'svc.project-backup.v1',generatedAt:new Date().toISOString(),modules};
@@ -55,7 +55,7 @@ restoreInput.addEventListener('change',async()=>{
    const payroll=Array.isArray(obj.payrollComplete)?obj.payrollComplete.map(x=>({id:x.id,role:x.role,total:x.total,occupancy:x.occupancyPercent})):previous.payroll||[];
    add('svc_costos_v02',{...previous,recurring:obj.recurring,assets:obj.assets,payroll,hours:Number(obj.hours)||previous.hours||160,contingency:Number(obj.contingencyPercent??previous.contingency??0)});
   }else if(obj.schema==='svc.project-backup.v1'&&obj.modules&&typeof obj.modules==='object'){
-   const allowed=['svc_payroll_v01','svc_costos_v02','svc_productos_v01','svc-audiovisual-v2','svc-pi-v1','svc-pi-v2','svc-project-v1','svc-design-quotes-v1','svc-agency-v1','svc-contract-v1','svc-timeline-v1','svc-production-v1','svc-eco-v1','svc-break-even-v1','svc-commercial-quote-v1','svc-role-contracts-v1'];
+   const allowed=['svc_payroll_v01','svc_costos_v02','svc_productos_v01','svc-audiovisual-v2','svc-pi-v1','svc-pi-v2','svc-project-v1','svc-design-quotes-v1','svc-agency-v1','svc-contract-v1','svc-timeline-v1','svc-production-v1','svc-eco-v1','svc-break-even-v1','svc-commercial-quote-v1','svc-role-contracts-v1','svc-design-quotes-trash-v1'];
    for(const key of allowed){if(Object.prototype.hasOwnProperty.call(obj.modules,key)&&obj.modules[key]!==null&&typeof obj.modules[key]==='object')add(key,obj.modules[key]);}
   }else throw Error('Formato no reconocido. No se ha modificado ningún dato.');
   if(!pending.length)throw Error('El archivo no contiene datos compatibles.');
